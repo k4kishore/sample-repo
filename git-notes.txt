@@ -1,0 +1,11 @@
+git init
+git add README.md
+git commit -m "meaningful commit id"
+git branch -M master
+git remote add origin https://github.com/k4kishore/sample-repo.git
+git push -u origin master
+git remote -v
+
+git branch -d developer
+git push origin --delete developer
+
