@@ -62,8 +62,9 @@ Create the Deployment by running the following command:
 Run `kubectl get deployments` to check if the Deployment was created.
 If the Deployment is still being created, the output is similar to the following:
 
-NAME               READY   UP-TO-DATE   AVAILABLE   AGE
-nginx-deployment   0/3     0            0           1s
+`NAME               READY   UP-TO-DATE   AVAILABLE   AGE
+nginx-deployment   0/3     0            0           1s`
+
 When you inspect the Deployments in your cluster, the following fields are displayed:
 
 NAME lists the names of the Deployments in the namespace.
@@ -82,14 +83,16 @@ deployment "nginx-deployment" successfully rolled out
 
 Run the kubectl get deployments again a few seconds later. The output is similar to this:
 
-NAME               READY   UP-TO-DATE   AVAILABLE   AGE
-nginx-deployment   3/3     3            3           18s
+`NAME               READY   UP-TO-DATE   AVAILABLE   AGE
+nginx-deployment   3/3     3            3           18s`
+
 Notice that the Deployment has created all three replicas, and all replicas are up-to-date (they contain the latest Pod template) and available.
 
 To see the ReplicaSet (rs) created by the Deployment, run kubectl get rs. The output is similar to this:
 
-NAME                          DESIRED   CURRENT   READY   AGE
-nginx-deployment-75675f5897   3         3         3       18s
+`NAME                          DESIRED   CURRENT   READY   AGE
+nginx-deployment-75675f5897   3         3         3       18s`
+
 ReplicaSet output shows the following fields:
 
 NAME lists the names of the ReplicaSets in the namespace.
@@ -103,10 +106,11 @@ The HASH string is the same as the pod-template-hash label on the ReplicaSet.
 
 To see the labels automatically generated for each Pod, run kubectl get pods --show-labels. The output is similar to:
 
-NAME                                READY     STATUS    RESTARTS   AGE       LABELS
+`NAME                                READY     STATUS    RESTARTS   AGE       LABELS
 nginx-deployment-75675f5897-7ci7o   1/1       Running   0          18s       app=nginx,pod-template-hash=75675f5897
 nginx-deployment-75675f5897-kzszj   1/1       Running   0          18s       app=nginx,pod-template-hash=75675f5897
-nginx-deployment-75675f5897-qqcnn   1/1       Running   0          18s       app=nginx,pod-template-hash=75675f5897
+nginx-deployment-75675f5897-qqcnn   1/1       Running   0          18s       app=nginx,pod-template-hash=75675f5897`
+
 The created ReplicaSet ensures that there are three nginx Pods.
 
 
@@ -130,10 +134,10 @@ Follow the steps given below to update your Deployment:
 
 Let's update the nginx Pods to use the nginx:1.16.1 image instead of the nginx:1.14.2 image.
 
-kubectl set image deployment.v1.apps/nginx-deployment nginx=nginx:1.16.1
+`kubectl set image deployment.v1.apps/nginx-deployment nginx=nginx:1.16.1`
 or use the following command:
 
-kubectl set image deployment/nginx-deployment nginx=nginx:1.16.1
+`kubectl set image deployment/nginx-deployment nginx=nginx:1.16.1`
 where deployment/nginx-deployment indicates the Deployment, nginx indicates the Container the update will take place and nginx:1.16.1 indicates the new image and its tag.
 
 The output is similar to:
@@ -141,43 +145,46 @@ The output is similar to:
 deployment.apps/nginx-deployment image updated
 Alternatively, you can edit the Deployment and change .spec.template.spec.containers[0].image from nginx:1.14.2 to nginx:1.16.1:
 
-kubectl edit deployment/nginx-deployment
+`kubectl edit deployment/nginx-deployment`
 The output is similar to:
-
 deployment.apps/nginx-deployment edited
 
 To see the rollout status, run:
 
-kubectl rollout status deployment/nginx-deployment
+`kubectl rollout status deployment/nginx-deployment`
+
 The output is similar to this:
 
 Waiting for rollout to finish: 2 out of 3 new replicas have been updated...
 or
 
 deployment "nginx-deployment" successfully rolled out
+
 Get more details on your updated Deployment:
 
 After the rollout succeeds, you can view the Deployment by running kubectl get deployments. The output is similar to this:
 
-NAME               READY   UP-TO-DATE   AVAILABLE   AGE
-nginx-deployment   3/3     3            3           36s
+`NAME               READY   UP-TO-DATE   AVAILABLE   AGE
+nginx-deployment   3/3     3            3           36s`
+
 Run kubectl get rs to see that the Deployment updated the Pods by creating a new ReplicaSet and scaling it up to 3 replicas, as well as scaling down the old ReplicaSet to 0 replicas.
 
-kubectl get rs
+`kubectl get rs`
 The output is similar to this:
 
-NAME                          DESIRED   CURRENT   READY   AGE
+`NAME                          DESIRED   CURRENT   READY   AGE
 nginx-deployment-1564180365   3         3         3       6s
-nginx-deployment-2035384211   0         0         0       36s
+nginx-deployment-2035384211   0         0         0       36s`
+
 Running get pods should now show only the new Pods:
 
-kubectl get pods
+`kubectl get pods`
 The output is similar to this:
 
-NAME                                READY     STATUS    RESTARTS   AGE
+`NAME                                READY     STATUS    RESTARTS   AGE
 nginx-deployment-1564180365-khku8   1/1       Running   0          14s
 nginx-deployment-1564180365-nacti   1/1       Running   0          14s
-nginx-deployment-1564180365-z9gth   1/1       Running   0          14s
+nginx-deployment-1564180365-z9gth   1/1       Running   0          14s`
 Next time you want to update these Pods, you only need to update the Deployment's Pod template again.
 
 Deployment ensures that only a certain number of Pods are down while they are being updated. By default, it ensures that at least 75% of the desired number of Pods are up (25% max unavailable).
@@ -188,10 +195,10 @@ For example, if you look at the above Deployment closely, you will see that it f
 
 Get details of your Deployment:
 
-kubectl describe deployments
+`kubectl describe deployments`
 The output is similar to this:
 
-Name:                   nginx-deployment
+`Name:                   nginx-deployment
 Namespace:              default
 CreationTimestamp:      Thu, 30 Nov 2017 10:56:25 +0000
 Labels:                 app=nginx
@@ -200,7 +207,7 @@ Selector:               app=nginx
 Replicas:               3 desired | 3 updated | 3 total | 3 available | 0 unavailable
 StrategyType:           RollingUpdate
 MinReadySeconds:        0
-RollingUpdateStrategy:  25% max unavailable, 25% max surge
+RollingUpdateStrategy:  25% max unavailable, 25% max surge`
 Pod Template:
   Labels:  app=nginx
    Containers:
@@ -226,7 +233,8 @@ Pod Template:
     Normal  ScalingReplicaSet  22s   deployment-controller  Scaled up replica set nginx-deployment-1564180365 to 2
     Normal  ScalingReplicaSet  19s   deployment-controller  Scaled down replica set nginx-deployment-2035384211 to 1
     Normal  ScalingReplicaSet  19s   deployment-controller  Scaled up replica set nginx-deployment-1564180365 to 3
-    Normal  ScalingReplicaSet  14s   deployment-controller  Scaled down replica set nginx-deployment-2035384211 to 0
+    Normal  ScalingReplicaSet  14s   deployment-controller  Scaled down replica set nginx-deployment-2035384211 to 0`
+
 Here you see that when you first created the Deployment, it created a ReplicaSet (nginx-deployment-2035384211) and scaled it up to 3 replicas directly. When you updated the Deployment, it created a new ReplicaSet (nginx-deployment-1564180365) and scaled it up to 1 and waited for it to come up. Then it scaled down the old ReplicaSet to 2 and scaled up the new ReplicaSet to 2 so that at least 3 Pods were available and at most 4 Pods were created at all times. It then continued scaling up and down the new and the old ReplicaSet, with the same rolling update strategy. Finally, you'll have 3 available replicas in the new ReplicaSet, and the old ReplicaSet is scaled down to 0.
 
 Note:Kubernetes doesn't count terminating Pods when calculating the number of availableReplicas, which must be between replicas - maxUnavailable and replicas + maxSurge. As a result, you might notice that there are more Pods than expected during a rollout, and that the total resources consumed by the Deployment is more than replicas + maxSurge until the terminationGracePeriodSeconds of the terminating Pods expires.
