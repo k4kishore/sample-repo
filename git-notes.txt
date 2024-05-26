@@ -7,6 +7,6 @@ git remote add origin https://github.com/k4kishore/sample-repo.git
 git push -u origin master
 git remote -v
 
-git branch -d developer
-git push origin --delete developer
+git branch -d developer   # delete a branch locally
+git push origin --delete developer  # delete a branch remotely
 
