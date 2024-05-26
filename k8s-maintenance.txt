@@ -1,0 +1,76 @@
+kubectl get pods -o wide
+
+kubectl get nodes -o wide
+
+# drain - drain command will evict the pods from the node and schedule them on another free node
+
+#cordon - cordon will ensures that no new pods will get scheduled to the node while you preparing for removal or maitenance or during the upgrade process.
+
+kubectl drain <pod-name>
+
+Note:- If you see pods cannt deleted that associated with 'local storage' and 'DaemonSet-managed Pods'
+	Evem if you see the error like 'Cannot evict pod ad it would violate the pod's disruption budget'
+
+kubectl drain <pod-name> --ignore-daemonsets --delete-emptydir-data
+
+kubectl get pods -o wide 
+kubectl get nodes -o wide
+
+kubectl uncordon <pod-name>
+
+
+
+# To dealt with Pod Disruption Budget error
+# The pod disruption budget is a way to ensure the availability of pods to prevent accidental removal
+# As an application owner, you can create a PDB for each application. A PDB limits the number of Pods of a replicated application that are down simultaneously from voluntary disruptions. For example, a quorum-based application would like to ensure that the number of replicas running is never brought below the number needed for a quorum. A web front end might want to ensure that the number of replicas serving load never falls below a certain percentage of the total.
+
+kubectl get poddisruptionbudget -A
+
+kubectl delete poddisruptionbudget <pod-name>
+
+
+
+kubectl delete pod <pod-name>
+
+
+# scale the number of pods
+
+# Scaling the number of pods on the node up that are running before deleting a pod might be necessary if you need to run a minimum number at all times for application availability purposes.
+
+# For example, three pods may be required at all times, so you could scale up to four running pods before deleting one. If your pods are controlled by a StatefulSet, this is not an option. However, if they are controlled by a ReplicaSet or Deployment, you can use the kubectl scale command to achieve this.
+
+kubectl get deployments
+
+kubectl scale deployment <pod-name> --replicas=4
+
+kubectl scale deployment <pod-name> --replicas=3
+
+
+# Force pod deletion
+
+# Force deletions do not wait for confirmation from the kubelet that the Pod has been terminated. Where the pods are part of a StatefulSet, which has sticky identities for their pods. This means that another pod with the same name may attempt to be duplicated and run in parallel, causing problems with the application. It is for this reason this option is not recommended unless the graceful deletion using kubectl delete pods fails.
+
+kubectl delete pods <pod-name> --grace-period=0 --force
+
+# Note: If the pods is stuck in the 'unknown state' then run the below command to remove it from the cluster
+
+kubectl patch pod <pod-name> -p '{"metadata":{"finalizers":null}}'
+
+
+
+# Delete Completed pods
+
+# Completed pods are pods that have a status of Succeeded or Failed. To delete this kind of pods you would first need to identify them
+# This will show all the pods that have a status of Succeeded or Failed in a specific namespace.
+
+# Note: When you are deleting in bulk, you should proceed with caution, so before running the actual command, one suggestion would be to add the --dry-run=client option to and the output you prefer (yaml or json) using the -o yaml or -o json
+
+kubectl get pods --namespace <namespace-name> --failed-selection=status.phase=Succeeded,status.phase=Failed
+kubectl delete pods --namespace <namespace_name> --field-selector=status.phase=Succeeded,status.phase=Failed
+
+
+kubectl get pods --all-namespaces --field-selector=status.phase=Succeeded,status.phase=Failed
+kubectl delete pods --all-namespaces --field-selector=status.phase=Succeeded,status.phase=Failed
+
+
+
