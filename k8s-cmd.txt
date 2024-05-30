@@ -1,0 +1,7 @@
+kubectl get pods -n kube-system
+
+kubectl get daemonset -n kube-system
+
+# Downloaded from the docker registry
+kubectl run nginx --image nginx
+

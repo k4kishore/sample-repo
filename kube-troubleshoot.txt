@@ -1,0 +1,64 @@
+kubectl get pods -l app=myapp-deloyment
+
+kubectl describe pod <pod-name> -n <name-space>
+
+kubectl logs <pod-name> -n <namespace> -p
+
+kubectl logs <pod-name> -n <namespace> --previous
+
+kubectl logs <pod-name> -n <namespace> --all-containers
+
+kubectl logs <pod-name> -n <namespace> -c <containername>
+
+kubectl logs <pod-name> -n <namespace> --tail 50
+
+
+kubectl get events -n <namespace> --sort-by=.metadata.creationTimestamp
+
+kubectl get events -n <namespace> --failed-selector involvedObject.name=<pod-name>
+
+
+The Causes and How to Prevent of the CrashLoopBackOff Error
+There are many causes of the CrashLoopBackOff error. Listed below are a few common ones and how to fix them:
+
+1. Misconfiguration of the container
+Check for typos or misconfigured values in the configuration files.
+
+2. Out of memory or resources
+Check the resource limits are correctly specified. This can be caused by a sudden or unexpected increase in traffic or activity. Check the “resources: limits” section of the configuration file.
+
+3. Two or more containers are configured to use the same port
+This will cause the error if they’re in the same pod. Check the configuration file to ensure containers in the same pod are using different ports.
+
+4. The pods are attempting to connect to a file or database that is locked due to other pods using it
+To address this problem, ensure that the file or database you’re trying to access supports proper locking mechanisms. Different databases and file systems have various ways to handle concurrent access. For instance, databases often use row-level or table-level locking. You can also consider using transactions to ensure that the data remains consistent during concurrent access. Transactions allow you to group a series of operations into a single atomic unit.
+
+5. The pods may be referencing non-existent resources or packages
+Resources such as scripts that can be found in the container or a persistent storage volume. Double-check all references to resources, such as files, databases, or external services, in your pod configurations. Ensure that the paths and endpoints are correct.
+
+6. General error deploying the software
+Any bugs and exceptions specific to your software.
+
+7. Command line arguments may be incorrect or missing
+If any are specified in your configuration, ensure these are valid.
+
+8. The liveness probes are not configured correctly
+Check the configuration files. Common issues include incorrect paths, ports, or endpoints.
+
+9. Incorrectly specified permissions or not enough permissions have been granted
+ Check the pod has permission to perform its task, e.g., write to a folder, or connect to a database.
+
+10. The filesystem or folder the pod is trying to write to is read-only
+Ensure the target is writable by checking the permissions.
+
+11. Connection issues
+The networking configuration is incorrect, or DNS is unreachable. kube-dns may not be running, and the container cannot contact the external service.
+
+12. Incorrect environment variables are set
+Use env to inspect the environment variables.
+
+13. Managed identity is being used and cannot be accessed
+In cases where identities are assigned to the pod, such as in Azure Kubernetes Service, where a managed identity from Azure Active Directory is incorrectly assigned or cannot be accessed. Check the identity is valid and is assigned correctly.
+
+
+
