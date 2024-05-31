@@ -1,0 +1,99 @@
+# Manage images
+$docker history
+$docker commit
+
+# Manage containers
+$docker pause
+
+# Inspecting Containers
+$docker container ls
+$docker top
+
+# Image Builder
+$docker buildx
+$docker build
+
+
+$docker create <image>     --> create the container
+$docker run -p HOSTPORT:CONTAINERPORT IMAGE
+$docker run -p 8080:80 nginx                --> Map a port
+
+$docker run -P <image>     --> Map all ports
+
+$docker run --add-host HOSTNAME:IP IMAGE    --> Add a DNS entry
+
+$docker run -v HOSTDIR:TARGETDIR IMAGE
+$docker run -v ~/:/usr/share/nginx/html nginx   --> map a local directory into the container
+
+$docker run -it --entrypoint EXECUTABLE IMAGE
+$docker run -it --entrypoint bash nginx          --> change the entrypoint
+
+$docker pause <container_name>     --> pause the container
+
+$docker cp CONTAINER:SOURCE TARGET
+$docker cp web:/index.html index.html    --> Copy a file from a container to the HOST
+
+$docker cp TARGET CONTAINER:SOURCE
+$docker cp index.html web:/index.html    --> copy a file from the host to a container
+
+$docker rename OLD_NAME NEW_NAME
+$docker rename 096 web            --> Rename a container
+
+$docker attace <container_name>   --> attache to a running container
+
+$docker export <container>   --> exporting a contents of the container
+
+$docker wait <container_name>   --> wait until the container terminates and rerun the exit code
+
+$docker commit CONTAINER
+$docker commit web              --> Create an image out of container
+
+$docker rm -f <CONTAINER_NAME>  --> Delete a running container
+$docker rm <container_name>    --> delete a container
+
+$docker rmi <image_name>   --> delete an image
+
+$docker save IMAGE > FILE
+$docker save nginx > nginx.tar   --> Save an image to .tar file
+
+$docker load -i TARFILE
+$docker load -i nginx.tar    --> Load an image from a .tar file
+
+$docker logs <container_name>   --> show the logs of a container
+
+$docker-ssh      --> proposed script to transfer images between two daemons over ssh
+
+$docker port <conatiner_name>   --> show mapped ports of a container
+
+$docker diff <container_name>   --> Show all modified files in container
+
+
+
+# Services
+$docker service ls       --> To view list of all the services running in swarm
+$docker stack services <stack_name>      --> To see all running services
+$docker service logs <stack_name> <service_name>     --> To see all services logs
+$docker service scale stack_name_service_name=replicas    --> To scale services quickly across qualified node
+
+
+
+# Clean up
+$docker image prune      --> To clean or prune unused(dangling) images
+$docker image prune -a    --> To remove all images which are not in use containers
+$docker system prune     --> To prune your entire system
+$docker swarm leave      --> To leave swarm
+$docker stack rm <stack_name>    --> To remove swarm (delete all volume data and database info)
+$docker kill$(docker ps -q)      --> To kill all running containers
+
+
+
+# Docker Security
+$docker scout cves [OPTIONS] IMAGE|DIRECTORY|ARCHIVE     --> Analyzes software artifact for vulnerabilities
+$docker save redis > redis.tar     --> Display vulnerabilities from a docker save tarball
+$skopeo copy --override-os linux docker://alpine oci:redis   --> Display vulnerabilities from an OCI Directory
+$docker scout cves --format sarif --output redis.sarif.json redis         --> Export vulnerabilities to a SARIF JSON file
+$docker scout compare --to redis:6.0 redis:6-bullseye    -- > Comparing two images
+$docker scout quickview redis:6.0     --> Displaying the quick overview of an image
+
+
+Source: https://dockerlabs.collabnix.com/docker/cheatsheet/#docker-security

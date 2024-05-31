@@ -1,0 +1,42 @@
+# Docker provides the ability to package and run an application in a loosely isolated environment called a container.
+# The isolation and security allows you to run many containers simultaneously on a given host. Containers are lightweight and contain everything needed to run the application, so you do not need to rely on what is currently installed on the host. 
+# You can easily share containers while you work, and be sure that everyone you share with gets the same container that works in the same way.
+
+# IMAGES
+$docker build -t <image_name>                 --> Build an image from a Dockerfile
+$docker build -t <image_name> . -no-cache     --> Build an image from a Dockerfile without the cache
+$docker images     --> To list local images
+$docker rmi <image_name>    --> To delete an image
+$docker image prune     --> To remove all unused images
+
+
+#Docker HUB
+$docker login -u <username>
+$docker push <username>/<image_name>       --> Publish an image to Docker Hub
+$docker search <image_name> 
+$docker pull <image_name>
+
+
+# General commands
+$docker -d       --> To start the docker daemon
+$docker --help
+$docker info      --> To display system-wide information
+
+
+# Containers
+#A container is a runtime instance of a docker image. A container will always run the same, regardless of the infrastructure.
+#Containers isolate software from its environment and ensure that it works uniformly despite differences for instance between development and staging.
+
+$docker run --name <container_name> <image_name>    --> To create and run a container from an image with a custom name
+$docker run -p <host_port>:<container_port> <image_name>    --> To run a container with and publish a container's port(s) to the host
+$docker run -d <image_name>     --> To run a container in background
+$docker start|stop <container_name> (or <container-id>)     --> To start or stop an existing container
+$docker rm <container_name>   --> To remove a stopped container
+$docker exec -it <container_name> sh    --> To open a shell inside a running container
+$docker logs -f <container_name>    --> To Fetch and follow the logs of a container
+$docker inspect <container_name>  (or <container_id>)     --> To inspect a running container
+$docker ps   --> To list currently running containers
+$docker ps --all   --> To list all docker containers(running and stopped)
+$docker container stats   --> To view resource usage stats
+
+
