@@ -9,4 +9,35 @@ git remote -v
 
 git branch -d developer
 git push origin --delete developer
+$git branch --move master main    --> Rename your local master branch into main with the following command
 
+$git branch --move bad-branch-name corrected-branch-name    -->  Rename the branch locally with the git branch --move command
+This replaces your bad-branch-name with corrected-branch-name, but this change is only local for now. To let others see the corrected branch on the remote, push it:
+$git push --set-upstream origin corrected-branch-name
+$git branch --all
+$git branch merged   --> To see the merged branch list
+
+Git Clean:
+$git clean -n   --> dry-run [-n or --dry-run]
+$git clean -d   --> [-d which removes any files and also any subdirectories that become empty as a result]
+
+By default, the git clean command will only remove untracked files that are not ignored. Any file that matches a pattern in your .gitignore or other ignore files will not be removed. If you want to remove those files too, such as to remove all .o files generated from a build so you can do a fully clean build, you can add a -x to the clean command.
+$ git clean -n -d -x
+
+If you don’t know what the git clean command is going to do, always run it with a -n first to double check before changing the -n to a -f and doing it for real. The other way you can be careful about the process is to run it with the -i or “interactive” flag.
+$git clean -x -i
+
+
+Git Stash:
+Stashing takes the dirty state of your working directory — that is, your modified tracked files and staged changes — and saves it on a stack of unfinished changes that you can reapply at any time (even on a different branch). [you don’t want to do a commit of half-done work just so you can get back to this point later.] 
+you want to switch branches, but you don’t want to commit what you’ve been working on yet, so you’ll stash the changes. To push a new stash onto your stack, run 
+$git stash (or) git stash push
+$git stash list    -->  To see which stashes you’ve stored
+stash@{0}: WIP on master: 049d078 Create index file
+stash@{1}: WIP on master: c264051 Revert "Add file_size"
+stash@{2}: WIP on master: 21d80a5 Add number to log
+
+In this case, two stashes were saved previously, so you have access to three different stashed works. You can reapply the one you just stashed by using the command shown in the help output of the original stash command: git stash apply. If you want to apply one of the older stashes, you can specify it by naming it, like this: git stash apply stash@{2}. If you don’t specify a stash, Git assumes the most recent stash and tries to apply it:
+$git stash apply
+
+Source: https://git-scm.com/book/en/v2/Git-Tools-Stashing-and-Cleaning#_git_stashing
