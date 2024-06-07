@@ -40,3 +40,11 @@ $docker ps --all   --> To list all docker containers(running and stopped)
 $docker container stats   --> To view resource usage stats
 
 
+# AWS ECR and EKS
+login to ECR registry
+$aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin <randoncode>.dkr.ecr.<region>.amazonaws.com
+$docker build -t <randoncode>.dkr.ecr.<region>.amazonaws.com/demo-app-repo:latest .
+$docker push <randoncode>.dkr.ecr.<region>.amazonaws.com/demo-app-repo:latest:demo-app-repo/latest
+
+
+

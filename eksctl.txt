@@ -1,0 +1,42 @@
+# Create eks cluster
+
+$eksctl create cluster --name demo-cluster --region eu-north-1 --fargate
+
+Note: If your organization has any requirement that your worker nodes should be RHEL or an specific distributions then go with EC2 instances else go with fargate
+
+Then it will create for us.. setting availability zones 2[eu-north-2a eu-north-2b]
+subnets for each availability zone [public and private subnets] then creating EKS cluster with Fargate profile. In the private subnet we will deploy applications.
+[$eksctl utils describe-stacks --region=eu-north-1 --cluster=demo-cluster
+$eksctl utils udpate-cluster-logging --enable-types={SPECIFY-YOUR-LOG-TYPES-HERE (e.g. all)} --region=eu-north-1 --cluster=demo-cluster
+]
+
+# create eks fargate profile
+$eksctl create fargateprofile --cluster demo-cluster --region eu-north-1 --name alb-sample-app --namespace game-2048
+
+# this will deploy service, deployment and ingress. Without ingress controller there is nothing of having ingress resource
+$kubectl apply -f https://raw.githubusercontent.com/kunernetes-signs/aws-load-balancer-controller/v2.5.4/docs/examples/2048/2048_full.yaml
+
+$kubectl get pods -n game-2048
+
+$eksctl utils associate-iam-oidc-provider --cluster demo-cluster --approve
+
+$curl -O https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.5.4/docs/install/iam_policy.json
+
+$aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicy --policy-document file://iam_policy.json
+
+$eksctl create iamserviceaccount --cluster=<your-cluster-name> --namespace=kube-system --name=aws-load-balancer-controller --role-name AmazonEKSLoadBalancerControllerRole --attach-policy-arn=arn:aws:iam::<your-aws-account-id>:policy/AWSLoadBalancerControllerIAMPolicy --approve
+
+
+#create the ALB Controller using HELM chart
+$helm repo add eks https://aws.github.io/eks-charts
+$heml repo update eks
+
+#AWS Load Balancer Controller installation
+$helm install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=demo-cluster --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller --set region=eu-north-1 --set vpcId=vpc-048377843b3
+
+$kubectl get deployment -n kube-system aws-load-balancer-controller
+
+$kubectl get deploy -n kube-system
+$kubectl edit deploy/aws-load-balancer-controller -n kube-system
+
+
