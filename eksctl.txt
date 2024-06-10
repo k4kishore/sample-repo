@@ -40,3 +40,6 @@ $kubectl get deploy -n kube-system
 $kubectl edit deploy/aws-load-balancer-controller -n kube-system
 
 
+
+$kubectl get ingress -n game-2048
+
