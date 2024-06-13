@@ -9,6 +9,17 @@ $docker images     --> To list local images
 $docker rmi <image_name>    --> To delete an image
 $docker image prune     --> To remove all unused images
 
+#Loading a tarred repository from a file or the standard input stream
+$docker image load < ubuntu.tar.gz
+$docker image busybox > ubuntu.tar    --> Saving an image to a tar archive
+$docker container commit nginx      --> creating an image from a container
+$docker image tag nginx abc01/nginx  --> tagging an image
+
+$curl example.com/remote/Dockerfile | docker build -f - .  --> Building from a remote Dockerfile URI
+
+$docker build github.com/creak/docker-firefox  --> From a Remote GIT Repository
+$docker image rm nginx   --> Removing an image
+
 
 #Docker HUB
 $docker login -u <username>
@@ -47,4 +58,39 @@ $docker build -t <randoncode>.dkr.ecr.<region>.amazonaws.com/demo-app-repo:lates
 $docker push <randoncode>.dkr.ecr.<region>.amazonaws.com/demo-app-repo:latest:demo-app-repo/latest
 
 
+# Network
+$docker network create -d overlay MyOverlaynetwork   --> create a ovrelay network
+
+$docker network create -d bridge MyBridgenetwork  --> create a bridge network
+
+#Creating a customized overlay network
+$docker network create -d overlay \
+-subnet=192.168.0.0/16 \
+-subnet=192.170.0.0/16 \
+-gateway=192.160.0.100 \
+-gateway=192.170.0.100 \
+-ip-range=192.168.1.0/24 \
+-aux-address="my-router=192.168.1.5"
+-aux-address="my-switch=192.168.1.6" \
+-aux-address="my-printer=192.170.1.5"
+-aux-address="my-nas=192.170.1.6"
+MyOverlaynetwork
+
+$docker network rm MyOverlaynetwork   --> removing a network
+$docker network ls   --> listing networks
+$docker network connect MyOverlaynetwork nginx  --> connecting a running container to a network
+$docker network inspect MyOverlaynetwork  --> getting information about a network
+
+
+#Removing docker containers, images, volumes and networks
+$docker container rm nginx  --> removing a running container
+$docker container rm -v nginx  --> removing a container and its volume
+$docker container rm $(docker container ls -a -f status=exited -q)  --> removing all exited containers
+$docker container rm 'docker container ls -a -q'  --> removing all stopped containers
+
+$docker image rm $(docker image ls -f dangling=true -q)   --> removing dangling images
+
+$docker image rm -f $(docker image ls | grep "^"| awk "{print $3}")   ---> removing all untagged images
+
+$docker system prune -f  --> removing all unused containers, images networks and volumes
 
