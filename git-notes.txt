@@ -47,4 +47,5 @@ shown in the help output of the original stash command: git stash apply. If you 
 $git stash apply stash@{2}  If you don’t specify a stash, Git assumes the most recent stash and tries to apply it:
 $git stash apply
 
+$git stash pop	  --> this will pop the stashed entries []
 Source: https://git-scm.com/book/en/v2/Git-Tools-Stashing-and-Cleaning#_git_stashing
